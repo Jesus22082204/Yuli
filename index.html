@@ -1,0 +1,175 @@
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Animación Árbol de Corazones</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Georgia&display=swap');
+
+    body {
+      font-family: 'Georgia', serif;
+      background-color: #000000;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    .card {
+      background-color: #f3e4d7;
+      border-radius: 1.5rem;
+      max-width: 700px;
+      width: 100%;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      color: #3a2a1a;
+      overflow: visible;
+      position: relative;
+    }
+
+    @media (min-width: 768px) {
+      .card {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+
+    .text-container {
+      flex: 1;
+      padding-right: 1rem;
+      min-width: 250px;
+    }
+
+    .countdown {
+      margin-top: 1.5rem;
+      font-size: 1.75rem;
+      font-weight: 300;
+      line-height: 1;
+      user-select: none;
+    }
+
+    .countdown span.big {
+      font-size: 3rem;
+      font-weight: 400;
+      margin-right: 0.25rem;
+    }
+
+    .countdown span.bold {
+      font-weight: 600;
+      margin-left: 0.25rem;
+      margin-right: 0.5rem;
+    }
+
+    .countdown-label {
+      font-size: 0.875rem;
+      margin-bottom: 0.25rem;
+      user-select: none;
+    }
+
+    hr {
+      border-color: #3a2a1a;
+      margin-top: 0.25rem;
+      border-width: 1px 0 0 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="card" aria-label="Tarjeta con animación de árbol de corazones y mensaje">
+    <div class="text-container">
+      <p id="message" aria-live="polite" class="mb-4 text-base leading-relaxed min-h-[7.5rem]"></p>
+      <p class="countdown-label">Mi amor por ti comenzó hace...</p>
+      <p class="countdown" aria-live="polite" aria-atomic="true" aria-relevant="text">
+        <span class="big" id="days">0</span>días
+        <span class="bold" id="hours">00</span>horas
+        <span class="bold" id="minutes">00</span>minutos
+        <span class="bold" id="seconds">00</span>segundos
+      </p>
+      <hr />
+    </div>
+    <div style="width: 240px; height: 240px; margin-left: auto; margin-top: 1rem;">
+      <img 
+        src="https://storage.googleapis.com/a1aa/image/730e78af-44c1-4575-838d-f311af999a07.jpg" 
+        alt="Árbol con tronco verde y copa en forma de corazón grande formado por muchos corazones pequeños de colores rosa, rojo, naranja, amarillo y púrpura" 
+        class="max-w-full h-auto rounded-lg"
+        width="240" height="240"
+        aria-hidden="true"
+      />
+    </div>
+  </div>
+
+  <script>
+    // Text to show letter by letter
+    const fullText = `Para el amor de mi vida:
+
+Si pudiera elegir un lugar seguro, sería a tu lado.
+Cuanto más tiempo estoy contigo más te amo.
+Eres lo mas especial que tiene mi vida. 
+
+Te Amo Mi Vida, Te Amo Mi Yuli ❤️`;
+
+    const messageEl = document.getElementById('message');
+    let currentIndex = 0;
+
+    // Show text letter by letter with line breaks preserved
+    function typeText() {
+      if (currentIndex < fullText.length) {
+        const char = fullText[currentIndex];
+        if (char === '\n') {
+          messageEl.innerHTML += '<br/>';
+        } else {
+          // Escape HTML special chars
+          if (char === '<') {
+            messageEl.innerHTML += '&lt;';
+          } else if (char === '>') {
+            messageEl.innerHTML += '&gt;';
+          } else if (char === '&') {
+            messageEl.innerHTML += '&amp;';
+          } else {
+            messageEl.innerHTML += char;
+          }
+        }
+        currentIndex++;
+        setTimeout(typeText, 40);
+      }
+    }
+
+    // Countdown timer from 9 Feb 2025 00:00:00 UTC
+    const startDate = new Date('2025-02-09T00:00:00Z');
+
+    const daysEl = document.getElementById('days');
+    const hoursEl = document.getElementById('hours');
+    const minutesEl = document.getElementById('minutes');
+    const secondsEl = document.getElementById('seconds');
+
+    function updateCountdown() {
+      const now = new Date();
+      let diff = now - startDate;
+      if (diff < 0) diff = 0; // If before start date, show zero
+
+      const seconds = Math.floor(diff / 1000) % 60;
+      const minutes = Math.floor(diff / (1000 * 60)) % 60;
+      const hours = Math.floor(diff / (1000 * 60 * 60)) % 24;
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+      daysEl.textContent = days;
+      hoursEl.textContent = hours.toString().padStart(2, '0');
+      minutesEl.textContent = minutes.toString().padStart(2, '0');
+      secondsEl.textContent = seconds.toString().padStart(2, '0');
+    }
+
+    // Start typing text after a short delay (simulate animation delay)
+    setTimeout(() => {
+      typeText();
+    }, 1500);
+
+    // Update countdown every second
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  </script>
+</body>
+</html>
